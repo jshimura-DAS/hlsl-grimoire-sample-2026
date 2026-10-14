@@ -30,14 +30,39 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     triangle.Init(rootSignature);
 
     // step-1 三角形ポリゴンにUV座標を設定
-
+	triangle.SetUVCoord(
+		0,  // 頂点0のUV座標を設定
+		0.0f, // U座標
+		1.0f // V座標
+    );
+    triangle.SetUVCoord(
+        1,  // 頂点1のUV座標を設定
+        0.0f, // U座標
+        0.0f // V座標
+    );
+    triangle.SetUVCoord(
+        2,  // 頂点2のUV座標を設定
+        1.0f, // U座標
+        0.0f // V座標
+    );
+    triangle.SetUVCoord(
+        3,  // 頂点3のUV座標を設定
+        1.0f, // U座標
+        1.0f // V座標
+    );
     // step-2 テクスチャをロード
+    Texture tex;
+	tex.InitFromDDSFile(L"Assets/image/sample_00.dds");
 
     // ディスクリプタヒープを作成
     DescriptorHeap ds;
     ds.RegistConstantBuffer(0, cb); // ディスクリプタヒープに定数バッファを登録
 
     // step-3 テクスチャをディスクリプタヒープに登録
+    ds.RegistShaderResource(
+		0,  // レジスタ番号（ディスクリプタヒープのインデックス）
+		tex // 登録するテクスチャ
+    );
 
     ds.Commit();                    //ディスクリプタヒープへの登録を確定
 
@@ -46,6 +71,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     //////////////////////////////////////
     auto& renderContext = g_graphicsEngine->GetRenderContext();
 
+	float angle = 0.0f; // 回転角度
+	float rotationSpeed = 0.0625f; // 回転速度
     // ここからゲームループ
     while (DispatchWindowMessage())
     {
@@ -61,6 +88,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
         // ワールド行列を作成
         Matrix mWorld;
+        float a = sin(angle)* sin(angle/2);
+		        
+        mWorld.MakeTranslation(0.0f, 0.0f, 0.0f); // 単位行列を作成
+		mWorld.MakeRotationZ(a); // Y軸回転行列を作成    
+
+        // 回転角度を更新
+        angle += rotationSpeed;
 
         // ワールド行列をグラフィックメモリにコピー
         cb.CopyToVRAM(mWorld);

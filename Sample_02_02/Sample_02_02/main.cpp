@@ -39,15 +39,15 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	// 4. 三角形の頂点バッファを作成
 	// 頂点配列を定義
-	const int vertexCount = 48; // 頂点の数
+	const int vertexCount = 7; // 頂点の数
 	SimpleVertex vertices[vertexCount];
 	for (int i = 0; i < vertexCount; i++)
 	{
 		vertices[i].pos[0] = sin(2.0*3.14159f * i / vertexCount ); // X座標
 		vertices[i].pos[1] = cos(2.0*3.14159f * i / vertexCount ); // Y座標
 		vertices[i].pos[2] = 0.0f; // Z座標
-		vertices[i].color[0] = 1.0f; // 赤
-		vertices[i].color[1] = 1.0f; // 緑
+		vertices[i].color[0] = vertices[i].pos[0]; // 赤
+		vertices[i].color[1] = vertices[i].pos[1]; // 緑
 		vertices[i].color[2] = 1.0f; // 青
 	}
 	
