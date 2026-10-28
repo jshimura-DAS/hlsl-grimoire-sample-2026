@@ -35,7 +35,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	directionLig.ligDirection.Normalize();
 
 	// ライトの色は灰色
-	directionLig.color = { 0.25f, 0.25f, 1.0f };
+	directionLig.color = { 0.5f, 0.5f, 0.5f };
 
     // step-3 モデルを初期化する
     // ここにモデルの初期化コードを記述する

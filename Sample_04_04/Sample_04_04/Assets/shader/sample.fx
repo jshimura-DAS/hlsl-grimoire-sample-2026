@@ -81,12 +81,15 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     float t = dot(psIn.normal, directionLight.direction);
     t *= -1.0f;
 
+    t = (t+1.0f) / 2.0f;
     // 内積の結果が0以下なら0にする
     if(t < 0.0f)
     {
         t = 0.0f;
     }
-
+    t = pow(t, 1.5f);
+    
+    
     // 拡散反射光を求める
     float3 diffuseLig = directionLight.color * t;
 
@@ -104,6 +107,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
         t = 0.0f;
     }
 
+    
     // 鏡面反射の強さを絞る
     t = pow(t, 5.0f);
 
@@ -114,6 +118,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     float3 lig = diffuseLig + specularLig;
 
     // step-1 ライトの効果を一律で底上げする
+    // lig += float3(0.1f, 0.1f, 0.1f);
 
     float4 finalColor = g_texture.Sample(g_sampler, psIn.uv);
 

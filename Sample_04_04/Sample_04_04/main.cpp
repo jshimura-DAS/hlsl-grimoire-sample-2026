@@ -89,6 +89,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
         qRot.SetRotationDegX(g_pad[0]->GetLStickYF());
         qRot.Apply(light.directionLight.direction);
 
+		Quaternion qRot2;
+		qRot2.SetRotationDegY(g_pad[0]->GetRStickXF());
+
+
         // ティーポットをドロー
         model.Draw(renderContext);
 
