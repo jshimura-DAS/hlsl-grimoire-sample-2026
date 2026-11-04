@@ -19,6 +19,12 @@ struct Light
     float ptRange;          // 影響範囲
 
     // step-1 ライト構造体にスポットライト用のメンバ変数を追加
+	Vector3 spPosition;     // 位置
+	float pad3;             // パディング
+	Vector3 spColor;        // カラー
+	float spRange;          // 影響範囲
+	Vector3 spDirection;    // 射出方向
+	float spAngle;          // 射出角度
 
     Vector3 eyePos;         // 視点の位置
     float pad4;
@@ -58,6 +64,22 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     InitAmbientLight(light);
 
     // step-2 スポットライトのデータを初期化する
+    // 初期座標は(0,50,0)
+	light.spPosition = { 0.0f, 50.0f, 0.0f };
+
+    // ライトのカラーを(10,10,10)
+	light.spColor = { 10.0f, 10.0f, 10.0f };
+
+    // 射出方向は斜め下
+	light.spDirection = { 1.0f, -1.0f, 1.0f };
+    light.spDirection.Normalize();
+
+    // 射出範囲は300
+	light.spRange = 300.0f;
+
+	// 射出角度は25度
+	light.spAngle = 25.0f;
+
 
     // モデルを初期化する
     // モデルを初期化するための情報を構築する
@@ -79,9 +101,45 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
         //////////////////////////////////////
 
         // step-3 コントローラー左スティックでスポットライトを移動させる
-
+        // 左アナログスティックで動かす
+		light.spPosition.x -= g_pad[0]->GetLStickXF();
+        if(g_pad[0]->IsPress(enButtonB))
+        {
+			// Bボタンを押している間はスポットライトを上に移動させる
+            light.spPosition.y += g_pad[0]->GetLStickYF();
+        }
+        else
+        {
+			light.spPosition.z -= g_pad[0]->GetLStickYF();
+        }
         // step-4 コントローラー右スティックでスポットライトを回転させる
-		
+        // y軸周りの回転クォータニオンを計算する
+        Quaternion qRotY;
+		qRotY.SetRotationY(g_pad[0]->GetRStickXF() * 0.01f);
+
+        // 計算したクォータニオンでライトの方向を回す
+		qRotY.Apply(light.spDirection);
+
+		// x軸周りの回転クォータニオンを計算する
+        Vector3 rotAxis;
+        rotAxis.Cross(g_vec3AxisY, light.spDirection);
+		Quaternion qRotX;
+		qRotX.SetRotation(rotAxis, g_pad[0]->GetRStickYF() * 0.01f);
+
+		// 計算したクォータニオンでライトの方向を回す
+		qRotX.Apply(light.spDirection);
+
+        // スポットライトモデルの回転クォータニオンを求める
+		Quaternion qRot;
+        qRot.SetRotation({0.0f,0.0f,-1.0f},light.spDirection);
+
+		// スポットライトモデルのワールド行列を更新する
+		lightModel.UpdateWorldMatrix(light.spPosition, qRot, g_vec3One);
+
+
+
+
+
         // 背景モデルをドロー
         bgModel.Draw(renderContext);
 

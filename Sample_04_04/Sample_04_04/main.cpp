@@ -74,6 +74,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     //////////////////////////////////////
     auto& renderContext = g_graphicsEngine->GetRenderContext();
 
+	float yDeg = 0.0f;
+
     // ここからゲームループ
     while (DispatchWindowMessage())
     {
@@ -90,8 +92,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
         qRot.Apply(light.directionLight.direction);
 
 		Quaternion qRot2;
-		qRot2.SetRotationDegY(g_pad[0]->GetRStickXF());
-
+		yDeg += g_pad[1]->GetRStickXF();  // 右スティックのX軸の値を加算していく
+        qRot2.SetRotationDegY(yDeg);
+        // modelをy回転する
+		model.UpdateWorldMatrix(Vector3(yDeg/10.0f, 0, 0), qRot2, Vector3(1, 1, 1));
 
         // ティーポットをドロー
         model.Draw(renderContext);

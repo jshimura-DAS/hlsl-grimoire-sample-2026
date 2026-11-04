@@ -37,6 +37,9 @@ cbuffer DirectionLightCb : register(b1)
     float3 dirColor;        // ライトのカラー
 
     // step-6 定数バッファーにポイントライト用の変数を追加
+    float3 ptPosition;      // ポイントライトの位置
+    float3 ptColor;         // ポイントライトのカラー
+    float ptRange;          // ポイントライトの影響範囲
 
     float3 eyePos;          // 視点の位置
     float3 ambientLight;    // アンビエントライト
@@ -90,16 +93,41 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 
     // ポイントライトによるLambert拡散反射光とPhong鏡面反射光を計算する
     // step-7 サーフェイスに入射するポイントライトの光の向きを計算する
+    float3 ligDir = normalize(psIn.worldPos - ptPosition);
 
     // step-8 減衰なしのLambert拡散反射光を計算する
-
+    float3 diffPoint = CalcLambertDiffuse(
+        ligDir,     // ポイントライトの光の向き
+        ptColor,    // ポイントライトの光の色
+        psIn.normal // サーフェイスの法線
+    );
+    
     // step-9 減衰なしのPhong鏡面反射光を計算する
-
+    float3 specPoint = CalcPhongSpecular(
+        ligDir,         // ポイントライトの光の向き
+        ptColor,        // ポイントライトの光の色
+        psIn.worldPos,  // サーフェイスの位置
+        psIn.normal     // サーフェイスの法線
+    );
+    
     // step-10 距離による影響率を計算する
+    // 距離を求める
+    float distance = length(psIn.worldPos - ptPosition);
+    
+    // 距離に応じて影響率を計算する
+    float affect = 1.0f - 1.0f / ptRange * distance;
+    // 影響率が0未満にならないようにする
+    affect = max(0.0f, affect);
+    // 影響を指数関数的にする
+    affect = pow(affect, 20.0f);
 
     // step-11 拡散反射光と鏡面反射光に影響率を乗算して影響を弱める
+    diffPoint *= affect;
+    specPoint *= affect;
 
     // step-12 2つの反射光を合算して最終的な反射光を求める
+    float3 diffuseLig = diffPoint + diffDirection;
+    float3 specularLig = specPoint + specDirection;
 
     // 拡散反射光と鏡面反射光を足し算して、最終的な光を求める
     float3 lig = diffuseLig + specularLig + ambientLight;
