@@ -18,6 +18,12 @@ struct Light
     float pad3;
 
     // step-1 地面色と天球色、地面の法線を追加する
+    Vector3 groundColor;    // 地面の色
+    float pad4;
+    Vector3 skyColor;       // 天球の色
+    float pad5;
+    Vector3 groundNormal;   // 地面の法線
+    float pad6;
 };
 
 //////////////////////////////////////
@@ -53,6 +59,21 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     InitAmbientLight(light);
 
     // step-2 地面色、天球色、地面の法線のデータを設定する
+	// 地面色を設定
+    light.groundColor.x = 0.7f;
+    light.groundColor.y = 0.5f;
+    light.groundColor.z = 0.3f;
+
+    // 天球色を設定
+    light.skyColor.x = 0.15f;
+    light.skyColor.y = 0.5f;
+    light.skyColor.z = 0.95f;
+
+    // 地面の法線を設定
+    light.groundNormal.x = 0.0f;
+    light.groundNormal.y = 1.0f;
+    light.groundNormal.z = 0.0f;
+
 
     // モデルを初期化する
     // モデルを初期化するための情報を構築する
@@ -80,10 +101,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
         qRotY.Apply(light.dirDirection);
 
         // 背景モデルをドロー
-        // bgModel.Draw(renderContext);
+        bgModel.Draw(renderContext);
 
         // ティーポットモデルをドロー
         teapotModel.Draw(renderContext);
+
+		// ライトモデルをドロー
+		lightModel.Draw(renderContext);
 
         //////////////////////////////////////
         // 絵を描くコードを書くのはここまで！！！
@@ -146,6 +170,11 @@ void InitModel(Model& bgModel, Model& teapotModel, Model& lightModel, Light& lig
 
     // 初期化情報を使ってモデルを初期化する
     lightModel.Init(lightModelInitData);
+	lightModel.UpdateWorldMatrix(
+		{ 0.0f, 50.0f, 0.0f },
+		g_quatIdentity,
+		g_vec3One
+	);
 }
 
 void InitDirectionLight(Light& light)
