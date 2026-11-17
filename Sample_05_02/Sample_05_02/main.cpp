@@ -65,7 +65,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
     // step-2 スポットライトのデータを初期化する
     // 初期座標は(0,50,0)
-	light.spPosition = { 0.0f, 50.0f, 0.0f };
+	light.spPosition = { 0.0f, 150.0f, 0.0f };
 
     // ライトのカラーを(10,10,10)
 	light.spColor = { 10.0f, 10.0f, 10.0f };
@@ -77,8 +77,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     // 射出範囲は300
 	light.spRange = 300.0f;
 
-	// 射出角度は25度
-	light.spAngle = 25.0f;
+	// 射出角度は10度
+	light.spAngle = Math::DegToRad(25.0f);
 
 
     // モデルを初期化する
@@ -136,15 +136,14 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		// スポットライトモデルのワールド行列を更新する
 		lightModel.UpdateWorldMatrix(light.spPosition, qRot, g_vec3One);
 
-
-
-
-
         // 背景モデルをドロー
         bgModel.Draw(renderContext);
 
         // スポットライトモデルをドロー
         lightModel.Draw(renderContext);
+
+		// ティーポットモデルをドロー　*実験で追加*
+		teapotModel.Draw(renderContext);
 
         //////////////////////////////////////
         // 絵を描くコードを書くのはここまで！！！

@@ -163,7 +163,7 @@ void InitDirectionLight(Light& light)
 void InitAmbientLight(Light& light)
 {
     // アンビエントライト
-    light.ambientLight.x = 0.3f;
-    light.ambientLight.y = 0.3f;
-    light.ambientLight.z = 0.3f;
+    light.ambientLight.x = 0.0f;
+    light.ambientLight.y = 0.0f;
+    light.ambientLight.z = 0.0f;
 }
