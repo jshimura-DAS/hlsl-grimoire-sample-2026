@@ -1,6 +1,8 @@
 ﻿#include "stdafx.h"
 #include "system/system.h"
 
+#include "../_Append/glasscubeGenerator.h"
+
 const int NUM_DIRECTIONAL_LIGHT = 4; // ディレクションライトの数
 
 /// <summary>
@@ -52,11 +54,16 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     light.eyePos = g_camera3D->GetPosition();
     light.specPow = 5.0f;
 
+    CreateGlassCubeTkmFile();
+
+
+
+
     // 3Dモデルを作成
     Model model;
     ModelInitData initData;
 
-    initData.m_tkmFilePath = "Assets/modelData/sample.tkm";
+    initData.m_tkmFilePath = "Assets/modelData/GlassCube.tkm";
     initData.m_fxFilePath = "Assets/shader/sample.fx";
     initData.m_expandConstantBuffer = &light;
     initData.m_expandConstantBufferSize = sizeof(light);

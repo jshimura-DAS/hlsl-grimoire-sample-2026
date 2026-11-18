@@ -109,9 +109,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
         qRot.SetRotationDeg(rotAxis, g_pad[0]->GetLStickYF());
         qRot.Apply(toPos);
         g_camera3D->SetPosition(g_camera3D->GetTarget() + toPos);
-
+        
         light.eyePos = g_camera3D->GetPosition();
-
+        
         model.Draw(renderContext);
 
         //////////////////////////////////////

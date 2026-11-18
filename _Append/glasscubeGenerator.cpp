@@ -1,3 +1,6 @@
+#pragma once
+#include "pch.h"   // 既存プロジェクトが pch.h の場合
+
 #include "stdafx.h"
 #include "GlassCubeGenerator.h"
 
